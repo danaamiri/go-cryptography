@@ -16,7 +16,7 @@ func Encode(args []string) {
 	filename, pubFile, err := readArgs(args)
 	errorCheck(err)
 
-	_, fileType := getFileName(filename)
+	orgName, fileType := getFileName(filename)
 
 	dataFile := readFile(filename)
 	publicKeyFile := readFile(pubFile)
@@ -41,7 +41,12 @@ func Encode(args []string) {
 	chunk := 214
 	var temp []byte
 
-	encrypted, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(fileType))
+	finalFileName := orgName
+	if len(fileType) > 0 {
+		finalFileName += "." + fileType
+	}
+
+	encrypted, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(finalFileName))
 	errorCheck(err)
 	_, err = f.Write(encrypted)
 
@@ -116,10 +121,13 @@ func readFile(filename string) (file []byte) {
 }
 
 func getFileName(fileCompleteName string) (filename string, fileType string) {
-	splitted := strings.Split(fileCompleteName, ".")
+	fileOrgNameSpl := strings.Split(fileCompleteName, "/")
+	fileOrgName := fileOrgNameSpl[len(fileOrgNameSpl)-1]
+	splitted := strings.Split(fileOrgName, ".")
 	if len(splitted) > 1 {
+		println(splitted[0])
 		return splitted[0], splitted[len(splitted)-1]
 	} else {
-		return fileCompleteName, ""
+		return splitted[0], ""
 	}
 }

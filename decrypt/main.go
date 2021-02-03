@@ -49,7 +49,7 @@ func Decode(args []string) {
 		//err = ioutil.WriteFile("encrypted/data.p", append(encrypted, (byte) "\n"), 0644)
 		if i == 0 {
 			if string(decrypted) != "" {
-				f, err = os.Create("decrypted/data." + string(decrypted))
+				f, err = os.Create("decrypted/" + string(decrypted))
 				errorCheck(err)
 			} else {
 				f, err = os.Create("decrypted/data")
