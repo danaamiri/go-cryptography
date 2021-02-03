@@ -38,7 +38,7 @@ func Encode(args []string) {
 	errorCheck(err)
 
 	j := len(dataFile)
-	chunk := 128
+	chunk := 214
 	var temp []byte
 
 	encrypted, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(fileType))
